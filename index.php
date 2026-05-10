@@ -135,8 +135,7 @@ a{text-decoration:none;color:inherit}
           <a href="?lang=<?= $l ?>" class="lang-opt<?= getLang()===$l?' on':'' ?>"><?= t("lang_{$l}") ?></a>
         <?php endforeach; ?>
       </div>
-      <a href="/login.php" class="btn-nav-login"><?= h(t('nav_login')) ?></a>
-      <a href="/register.php" class="btn-nav-reg"><?= h(t('nav_register')) ?></a>
+      <a href="/login.php" class="btn-nav-reg"><?= h(t('nav_login')) ?></a>
     </div>
   </div>
 </nav>
@@ -147,13 +146,9 @@ a{text-decoration:none;color:inherit}
   <h1 class="hero-title">НУ, <span>НИ</span>ХАУ СЕБЕ!</h1>
   <p class="hero-sub"><?= h(t('hero_subtitle')) ?></p>
   <div class="hero-ctas">
-    <a href="/register.php?role=student" class="btn-hero-primary">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-      <?= h(t('hero_cta_student')) ?>
-    </a>
-    <a href="/register.php?role=teacher" class="btn-hero-outline">
-      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-      <?= h(t('hero_cta_teacher')) ?>
+    <a href="/login.php" class="btn-hero-primary">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+      <?= h(t('nav_login')) ?>
     </a>
   </div>
 </div>
@@ -306,8 +301,7 @@ a{text-decoration:none;color:inherit}
   <div class="cta-title"><?= h(t('cta_title')) ?></div>
   <div class="cta-sub"><?= h(t('cta_subtitle')) ?></div>
   <div class="cta-btns">
-    <a href="/register.php" class="btn-cta-red"><?= h(t('nav_register')) ?></a>
-    <a href="/login.php" class="btn-cta-ghost"><?= h(t('nav_login')) ?></a>
+    <a href="/login.php" class="btn-cta-red"><?= h(t('nav_login')) ?></a>
   </div>
 </div>
 

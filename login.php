@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$email || !$pass) { $error = t('err_required'); }
     else {
         $user = loginUser($email, $pass);
-        if ($user) { header('Location: '.($user['role']==='teacher'?'/teacher/':'/student/')); exit; }
+        if ($user) { redirectByRole($user); }
         $error = t('err_credentials');
     }
 }

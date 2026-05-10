@@ -18,17 +18,29 @@ function currentUser(): ?array
     return $user;
 }
 
-function requireAuth(string $role = null): array
+function redirectByRole(array $user): void
 {
-    if (!isLoggedIn()) {
-        header('Location: /login.php');
-        exit;
-    }
+    match($user['role']) {
+        'admin'   => header('Location: /admin/'),
+        'teacher' => header('Location: /teacher/'),
+        default   => header('Location: /student/'),
+    };
+    exit;
+}
+
+function requireAuth(string $role): array
+{
+    if (!isLoggedIn()) { header('Location: /login.php'); exit; }
     $user = currentUser();
-    if ($role !== null && $user['role'] !== $role) {
-        header('Location: /login.php');
-        exit;
-    }
+    if ($user['role'] !== $role) { redirectByRole($user); }
+    return $user;
+}
+
+function requireAdmin(): array
+{
+    if (!isLoggedIn()) { header('Location: /login.php'); exit; }
+    $user = currentUser();
+    if ($user['role'] !== 'admin') { redirectByRole($user); }
     return $user;
 }
 
@@ -45,21 +57,14 @@ function loginUser(string $email, string $password): ?array
     return null;
 }
 
-function registerUser(string $name, string $email, string $password, string $role): ?int
+function createUser(string $name, string $email, string $password, string $role): ?int
 {
     try {
-        $st = db()->prepare(
-            'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)'
-        );
-        $st->execute([
-            trim($name),
-            strtolower(trim($email)),
-            password_hash($password, PASSWORD_BCRYPT),
-            $role,
-        ]);
+        $st = db()->prepare('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)');
+        $st->execute([trim($name), strtolower(trim($email)), password_hash($password, PASSWORD_BCRYPT), $role]);
         return (int) db()->lastInsertId();
     } catch (PDOException $e) {
-        return null; // duplicate email
+        return null;
     }
 }
 
