@@ -21,7 +21,7 @@ function cssVars(): string { return '
 body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--black); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
 /* ── Sidebar ── */
-.sidebar { position: fixed; inset-y: 0; left: 0; width: 220px; background: var(--black); display: flex; flex-direction: column; z-index: 40; overflow: hidden; }
+.sidebar { position: fixed; top: 0; bottom: 0; left: 0; width: 220px; background: var(--black); display: flex; flex-direction: column; z-index: 40; overflow-y: auto; }
 .sb-brand { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .sb-brand-name { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .02em; line-height: 1.2; }
 .sb-brand-sub { font-size: 10px; color: var(--red); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
