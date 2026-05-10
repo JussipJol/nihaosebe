@@ -14,17 +14,19 @@ $error = $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'create') {
         $name  = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
+        $login = trim($_POST['login'] ?? '');
         $pass  = trim($_POST['password'] ?? '');
         $role  = $_POST['role'] ?? '';
-        if (!$name || !$email || !$pass || !in_array($role, ['student','teacher'])) {
+        if (!$name || !$login || !$pass || !in_array($role, ['student','teacher'])) {
             $error = 'Заполните все поля.';
         } elseif (strlen($pass) < 6) {
             $error = 'Пароль минимум 6 символов.';
+        } elseif (!preg_match('/^[a-zA-Z0-9_.\-]+$/', $login)) {
+            $error = 'Логин может содержать только буквы, цифры, точку, дефис и _';
         } else {
-            $id = createUser($name, $email, $pass, $role);
-            if ($id === null) $error = 'Этот email уже зарегистрирован.';
-            else $success = "Профиль создан: {$email} / {$pass}";
+            $id = createUser($name, $login, $pass, $role);
+            if ($id === null) $error = 'Этот логин уже занят.';
+            else $success = "Профиль создан: логин <b>{$login}</b>, пароль <b>{$pass}</b>";
         }
     } elseif ($_POST['action'] === 'delete') {
         $uid = (int)($_POST['uid'] ?? 0);
@@ -55,7 +57,7 @@ if ($filterRole && in_array($filterRole, ['student','teacher'])) {
     $where[] = 'role = ?'; $params[] = $filterRole;
 }
 if ($search) {
-    $where[] = '(name LIKE ? OR email LIKE ?)';
+    $where[] = '(name LIKE ? OR login LIKE ?)';
     $params[] = "%{$search}%"; $params[] = "%{$search}%";
 }
 
@@ -194,7 +196,7 @@ $showForm = $error || ($success && isset($_POST['action']) && $_POST['action'] =
           <thead>
             <tr>
               <th>Имя</th>
-              <th>Email</th>
+              <th>Логин</th>
               <th>Роль</th>
               <th>Зарегистрирован</th>
               <th></th>
@@ -209,7 +211,7 @@ $showForm = $error || ($success && isset($_POST['action']) && $_POST['action'] =
                   <span style="font-weight:600"><?= h($u['name']) ?></span>
                 </div>
               </td>
-              <td style="color:var(--muted)"><?= h($u['email']) ?></td>
+              <td><span class="mono" style="font-weight:600"><?= h($u['login']) ?></span></td>
               <td>
                 <?php if ($u['role']==='teacher'): ?>
                   <span class="badge badge-amber">Преподаватель</span>
@@ -253,8 +255,11 @@ $showForm = $error || ($success && isset($_POST['action']) && $_POST['action'] =
         <input type="text" name="name" required class="input" value="<?= h($_POST['name']??'') ?>" placeholder="Имя Фамилия">
       </div>
       <div>
-        <label class="label">Email</label>
-        <input type="email" name="email" required class="input" value="<?= h($_POST['email']??'') ?>" placeholder="user@example.com">
+        <label class="label">Логин</label>
+        <input type="text" name="login" required class="input mono" value="<?= h($_POST['login']??'') ?>"
+               placeholder="student_01" pattern="[a-zA-Z0-9_.\-]+"
+               title="Только буквы, цифры, точка, дефис и _">
+        <p style="font-size:11px;color:var(--muted);margin-top:4px">Только буквы, цифры, _ . - · Без пробелов</p>
       </div>
       <div>
         <label class="label">Роль</label>

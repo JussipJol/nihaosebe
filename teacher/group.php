@@ -37,7 +37,7 @@ $st = db()->prepare("
 $st->execute([$gid]);
 $lessons = $st->fetchAll();
 
-$st = db()->prepare("SELECT u.id,u.name,u.email FROM student_groups sg JOIN users u ON u.id=sg.student_id WHERE sg.group_id=? ORDER BY u.name");
+$st = db()->prepare("SELECT u.id,u.name,u.login FROM student_groups sg JOIN users u ON u.id=sg.student_id WHERE sg.group_id=? ORDER BY u.name");
 $st->execute([$gid]);
 $students = $st->fetchAll();
 ?>
@@ -148,7 +148,7 @@ $students = $st->fetchAll();
               <div class="avatar-sm"><?= mb_strtoupper(mb_substr($s['name'],0,1)) ?></div>
               <div style="min-width:0">
                 <div style="font-size:13px;font-weight:600;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?= h($s['name']) ?></div>
-                <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?= h($s['email']) ?></div>
+                <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:monospace"><?= h($s['login']) ?></div>
               </div>
             </div>
             <?php endforeach; ?>

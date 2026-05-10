@@ -44,10 +44,10 @@ function requireAdmin(): array
     return $user;
 }
 
-function loginUser(string $email, string $password): ?array
+function loginUser(string $login, string $password): ?array
 {
-    $st = db()->prepare('SELECT * FROM users WHERE email = ?');
-    $st->execute([strtolower(trim($email))]);
+    $st = db()->prepare('SELECT * FROM users WHERE login = ?');
+    $st->execute([trim($login)]);
     $user = $st->fetch();
     if ($user && password_verify($password, $user['password'])) {
         session_regenerate_id(true);
@@ -57,11 +57,11 @@ function loginUser(string $email, string $password): ?array
     return null;
 }
 
-function createUser(string $name, string $email, string $password, string $role): ?int
+function createUser(string $name, string $login, string $password, string $role): ?int
 {
     try {
-        $st = db()->prepare('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)');
-        $st->execute([trim($name), strtolower(trim($email)), password_hash($password, PASSWORD_BCRYPT), $role]);
+        $st = db()->prepare('INSERT INTO users (name, login, password, role) VALUES (?, ?, ?, ?)');
+        $st->execute([trim($name), trim($login), password_hash($password, PASSWORD_BCRYPT), $role]);
         return (int) db()->lastInsertId();
     } catch (PDOException $e) {
         return null;

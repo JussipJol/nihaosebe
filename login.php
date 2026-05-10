@@ -9,11 +9,11 @@ if (isLoggedIn()) { $u = currentUser(); header('Location: '.($u['role']==='teach
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
+    $login = trim($_POST['login'] ?? '');
     $pass  = $_POST['password'] ?? '';
-    if (!$email || !$pass) { $error = t('err_required'); }
+    if (!$login || !$pass) { $error = t('err_required'); }
     else {
-        $user = loginUser($email, $pass);
+        $user = loginUser($login, $pass);
         if ($user) { redirectByRole($user); }
         $error = t('err_credentials');
     }
@@ -85,9 +85,9 @@ a{text-decoration:none;color:inherit}
 
     <form method="POST">
       <div class="form-group">
-        <label class="label"><?= h(t('field_email')) ?></label>
-        <input type="email" name="email" required autocomplete="email" class="input"
-               value="<?= h($_POST['email'] ?? '') ?>" placeholder="you@example.com">
+        <label class="label">Логин</label>
+        <input type="text" name="login" required autocomplete="username" class="input"
+               value="<?= h($_POST['login'] ?? '') ?>" placeholder="Ваш логин">
       </div>
       <div class="form-group">
         <label class="label"><?= h(t('field_password')) ?></label>
