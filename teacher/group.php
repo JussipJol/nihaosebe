@@ -72,7 +72,7 @@ $students = $st->fetchAll();
   <?php if ($error): ?><div class="alert alert-error" style="margin-bottom:14px"><?= h($error) ?></div><?php endif; ?>
   <?php if ($success): ?><div class="alert alert-success" style="margin-bottom:14px">✓ <?= h($success) ?></div><?php endif; ?>
 
-  <div style="display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:start">
+  <div style="display:grid;grid-template-columns:1fr minmax(0,260px);gap:16px;align-items:start">
 
     <div>
       <!-- Add lesson -->

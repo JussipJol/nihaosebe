@@ -54,29 +54,34 @@ $groups = $st->fetchAll();
 <div class="main">
 <div class="content">
 
-  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px">
-    <div>
-      <h1 class="page-title"><?= h(t('student_dashboard')) ?></h1>
-      <p class="page-sub"><?= h($user['name']) ?></p>
-    </div>
-    <form method="POST" style="display:flex;gap:8px">
-      <input type="text" name="join_code" maxlength="6" class="input mono"
-             placeholder="<?= h(t('join_code_placeholder')) ?>"
-             style="width:150px;text-transform:uppercase;letter-spacing:.12em;font-weight:700">
-      <button type="submit" class="btn btn-black"><?= h(t('btn_join')) ?></button>
-    </form>
+  <!-- Заголовок -->
+  <div style="margin-bottom:24px">
+    <h1 class="page-title"><?= h(t('student_dashboard')) ?></h1>
+    <p class="page-sub"><?= h($user['name']) ?></p>
   </div>
 
-  <?php if ($error): ?><div class="alert alert-error" style="margin-bottom:16px"><?= h($error) ?></div><?php endif; ?>
-  <?php if ($success): ?><div class="alert alert-success" style="margin-bottom:16px">✓ <?= h($success) ?></div><?php endif; ?>
+  <!-- Вступить в группу -->
+  <div class="card p5" style="margin-bottom:24px">
+    <div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:10px"><?= h(t('join_group')) ?></div>
+    <form method="POST" style="display:flex;gap:8px;align-items:center">
+      <input type="text" name="join_code" maxlength="6" class="input mono"
+             placeholder="<?= h(t('join_code_placeholder')) ?>"
+             style="max-width:180px;text-transform:uppercase;letter-spacing:.12em;font-weight:700">
+      <button type="submit" class="btn btn-black"><?= h(t('btn_join')) ?></button>
+      <span style="font-size:12px;color:var(--muted)"><?= getLang()==='ru'?'Код выдаёт преподаватель':(getLang()==='kz'?'Кодты оқытушы береді':'Get the code from your teacher') ?></span>
+    </form>
+    <?php if ($error): ?><div class="alert alert-error" style="margin-top:10px"><?= h($error) ?></div><?php endif; ?>
+    <?php if ($success): ?><div class="alert alert-success" style="margin-top:10px">✓ <?= h($success) ?></div><?php endif; ?>
+  </div>
 
+  <!-- Группы -->
   <?php if (empty($groups)): ?>
     <div class="card p6" style="text-align:center;padding:56px 24px">
       <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="#D4D4D8" stroke-width="1.5" style="margin:0 auto 14px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
       <p style="color:var(--muted);font-size:14px"><?= h(t('no_groups')) ?></p>
     </div>
   <?php else: ?>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px">
       <?php foreach ($groups as $g):
         $tl  = (int)$g['tl'];
         $att = (int)$g['att'];

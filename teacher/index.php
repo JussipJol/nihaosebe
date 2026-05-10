@@ -87,7 +87,7 @@ $showForm = $error || $success;
       <p style="color:var(--muted);font-size:14px"><?= h(t('no_groups_teacher')) ?></p>
     </div>
   <?php else: ?>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">
       <?php foreach ($groups as $g): ?>
       <a href="/teacher/group.php?id=<?= $g['id'] ?>" class="card card-link p5">
         <div style="font-size:15px;font-weight:700;color:var(--black);margin-bottom:3px"><?= h($g['name']) ?></div>

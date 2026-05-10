@@ -49,7 +49,7 @@ body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color
 
 /* ── Layout ── */
 .main { margin-left: 220px; }
-.content { max-width: 1000px; padding: 36px 40px; }
+.content { max-width: 960px; padding: 36px 40px; margin: 0 auto; }
 @media (max-width: 767px) { .main { margin-left: 0; } .content { padding: 64px 16px 32px; } }
 
 /* ── Cards ── */
