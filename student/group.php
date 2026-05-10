@@ -49,8 +49,22 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
   </a>
 
   <div style="margin-bottom:24px">
-    <h1 class="page-title"><?= h($group['name']) ?></h1>
-    <?php if ($group['subject']): ?><div style="font-size:13px;color:var(--red);font-weight:600;margin-top:2px"><?= h($group['subject']) ?></div><?php endif; ?>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+      <h1 class="page-title" style="margin-bottom:0"><?= h($group['name']) ?></h1>
+      <?php if ($group['hsk_level']): ?>
+        <span style="background:var(--black);color:#fff;border-radius:7px;padding:3px 9px;font-size:12px;font-weight:700">HSK <?= (int)$group['hsk_level'] ?></span>
+      <?php endif; ?>
+    </div>
+    <?php if ($group['schedule'] || $group['lesson_time']): ?>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:4px">
+      <?php if ($group['schedule']): foreach (explode(',', $group['schedule']) as $d): ?>
+        <span style="background:var(--bg-sub);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;font-weight:600;color:var(--muted)"><?= h($d) ?></span>
+      <?php endforeach; endif; ?>
+      <?php if ($group['lesson_time']): ?>
+        <span style="font-size:13px;font-weight:600;color:var(--muted)"><?= h($group['lesson_time']) ?></span>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
     <p class="page-sub"><?= h(t('teacher')) ?>: <?= h($group['tn']) ?></p>
   </div>
 

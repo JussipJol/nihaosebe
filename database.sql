@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `subject` varchar(255) DEFAULT NULL,
+  `hsk_level` tinyint(1) DEFAULT NULL COMMENT '1-6',
+  `schedule` varchar(50) DEFAULT NULL COMMENT 'Пн,Ср,Пт',
+  `lesson_time` varchar(20) DEFAULT NULL COMMENT '18:00 - 20:00',
   `teacher_id` int(11) NOT NULL,
   `invite_code` varchar(8) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

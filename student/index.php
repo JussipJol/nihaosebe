@@ -37,7 +37,7 @@ $st = db()->prepare("
     LEFT JOIN lessons l ON l.group_id=g.id
     LEFT JOIN attendance a ON a.lesson_id=l.id AND a.student_id=?
     WHERE sg.student_id=?
-    GROUP BY g.id ORDER BY g.created_at DESC
+    GROUP BY g.id, g.hsk_level, g.schedule, g.lesson_time ORDER BY g.created_at DESC
 ");
 $st->execute([$user['id'],$user['id']]);
 $groups = $st->fetchAll();
@@ -91,14 +91,28 @@ $groups = $st->fetchAll();
         $sc  = $pct >= 80 ? 'badge-green' : ($pct >= 60 ? 'badge-amber' : 'badge-red');
       ?>
       <a href="/student/group.php?id=<?= $g['id'] ?>" class="card card-link p5">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
           <div style="min-width:0">
-            <div style="font-size:15px;font-weight:700;color:var(--black);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?= h($g['name']) ?></div>
-            <?php if ($g['subject']): ?><div style="font-size:12px;color:var(--red);font-weight:600;margin-bottom:2px"><?= h($g['subject']) ?></div><?php endif; ?>
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap">
+              <span style="font-size:15px;font-weight:700;color:var(--black)"><?= h($g['name']) ?></span>
+              <?php if ($g['hsk_level']): ?>
+                <span style="background:var(--black);color:#fff;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700">HSK <?= (int)$g['hsk_level'] ?></span>
+              <?php endif; ?>
+            </div>
             <div style="font-size:12px;color:var(--muted)"><?= h(t('teacher')) ?>: <?= h($g['tn']) ?></div>
           </div>
           <span class="badge <?= $sc ?>" style="flex-shrink:0;margin-left:8px"><?= $pct ?>%</span>
         </div>
+        <?php if ($g['schedule'] || $g['lesson_time']): ?>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:10px">
+          <?php if ($g['schedule']): foreach (explode(',', $g['schedule']) as $d): ?>
+            <span style="background:var(--bg-sub);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;color:var(--muted)"><?= h($d) ?></span>
+          <?php endforeach; endif; ?>
+          <?php if ($g['lesson_time']): ?>
+            <span style="font-size:11px;color:var(--muted);font-weight:600"><?= h($g['lesson_time']) ?></span>
+          <?php endif; ?>
+        </div>
+        <?php else: ?><div style="margin-bottom:10px"></div><?php endif; ?>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
           <div class="stat" style="background:var(--bg-sub)"><div class="stat-value"><?= $tl ?></div><div class="stat-label"><?= h(t('total_lessons')) ?></div></div>
           <div class="stat" style="background:var(--green-bg)"><div class="stat-value" style="color:var(--green)"><?= $att ?></div><div class="stat-label" style="color:var(--green)"><?= h(t('attended')) ?></div></div>

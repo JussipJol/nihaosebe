@@ -60,10 +60,28 @@ $students = $st->fetchAll();
 
   <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:24px">
     <div>
-      <h1 class="page-title"><?= h($group['name']) ?></h1>
-      <?php if ($group['subject']): ?><div style="font-size:13px;color:var(--red);font-weight:600;margin-top:2px"><?= h($group['subject']) ?></div><?php endif; ?>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <h1 class="page-title" style="margin-bottom:0"><?= h($group['name']) ?></h1>
+        <?php if ($group['hsk_level']): ?>
+          <span style="background:var(--black);color:#fff;border-radius:7px;padding:4px 10px;font-size:13px;font-weight:700">
+            HSK <?= (int)$group['hsk_level'] ?>
+          </span>
+        <?php endif; ?>
+      </div>
+      <?php if ($group['schedule'] || $group['lesson_time']): ?>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px">
+        <?php if ($group['schedule']): ?>
+          <?php foreach (explode(',', $group['schedule']) as $d): ?>
+            <span style="background:var(--bg-sub);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;font-weight:600;color:var(--muted)"><?= h($d) ?></span>
+          <?php endforeach; ?>
+        <?php endif; ?>
+        <?php if ($group['lesson_time']): ?>
+          <span style="font-size:13px;font-weight:600;color:var(--muted)"><?= h($group['lesson_time']) ?></span>
+        <?php endif; ?>
+      </div>
+      <?php endif; ?>
     </div>
-    <div style="background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:10px">
+    <div style="background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
       <span style="font-size:11px;color:var(--muted);font-weight:500"><?= h(t('invite_code')) ?></span>
       <span class="mono" style="font-size:18px;font-weight:800;color:var(--black);letter-spacing:.15em"><?= h($group['invite_code']) ?></span>
     </div>
