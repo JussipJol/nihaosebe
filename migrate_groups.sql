@@ -1,4 +1,5 @@
--- Запустить в HeidiSQL: выбери базу nunihaosebe, File → Load SQL file → F9
+-- Запустить в phpMyAdmin (Laragon → Database → SQL)
+-- Обновляет таблицу groups: убирает subject, добавляет новые поля
 
 ALTER TABLE `groups`
   ADD COLUMN `hsk_level`   tinyint(1)   DEFAULT NULL  AFTER `name`,

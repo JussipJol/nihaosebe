@@ -44,6 +44,14 @@ function requireAdmin(): array
     return $user;
 }
 
+function requireLogin(): array
+{
+    if (!isLoggedIn()) { header('Location: /login.php'); exit; }
+    $user = currentUser();
+    if (!$user) { session_destroy(); header('Location: /login.php'); exit; }
+    return $user;
+}
+
 function loginUser(string $login, string $password): ?array
 {
     $st = db()->prepare('SELECT * FROM users WHERE login = ?');

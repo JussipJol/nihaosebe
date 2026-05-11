@@ -10,32 +10,43 @@ $user = requireAuth('teacher');
 $lid = (int)($_GET['id']??0);
 if (!$lid) { header('Location: /teacher/'); exit; }
 
-$st = db()->prepare("SELECT l.*,g.id AS gid,g.name AS gn,g.subject FROM lessons l JOIN `groups` g ON g.id=l.group_id WHERE l.id=? AND g.teacher_id=?");
+$st = db()->prepare("SELECT l.*,g.id AS gid,g.name AS gn FROM lessons l JOIN `groups` g ON g.id=l.group_id WHERE l.id=? AND g.teacher_id=?");
 $st->execute([$lid,$user['id']]);
 $lesson = $st->fetch();
 if (!$lesson) { header('Location: /teacher/'); exit; }
 
 $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db=db(); $db->beginTransaction();
-    try {
-        foreach ($_POST['attendance']??[] as $sid=>$s) {
-            if (!in_array($s,['present','absent','late'])) continue;
-            $db->prepare('INSERT INTO attendance (lesson_id,student_id,status) VALUES (?,?,?) ON DUPLICATE KEY UPDATE status=VALUES(status)')->execute([$lid,(int)$sid,$s]);
+    if (isset($_POST['edit_lesson'])) {
+        $title = trim($_POST['lesson_title'] ?? '');
+        $date  = $_POST['lesson_date'] ?? '';
+        if ($title && $date) {
+            db()->prepare('UPDATE lessons SET title=?,lesson_date=? WHERE id=?')->execute([$title,$date,$lid]);
+            $lesson['title'] = $title;
+            $lesson['lesson_date'] = $date;
+            $success = t('lesson_updated');
         }
-        $hwt=trim($_POST['hw_title']??'');
-        if ($hwt) {
-            $hwd=trim($_POST['hw_desc']??'')?:null; $hwdue=$_POST['hw_due']??''?:null;
-            $ex=$db->prepare('SELECT id FROM homework WHERE lesson_id=?'); $ex->execute([$lid]); $ex=$ex->fetch();
-            if ($ex) $db->prepare('UPDATE homework SET title=?,description=?,due_date=? WHERE id=?')->execute([$hwt,$hwd,$hwdue,$ex['id']]);
-            else $db->prepare('INSERT INTO homework (lesson_id,title,description,due_date) VALUES (?,?,?,?)')->execute([$lid,$hwt,$hwd,$hwdue]);
-        }
-        foreach ($_POST['comment']??[] as $sid=>$c) {
-            $c=trim($c); if (!$c) continue;
-            $db->prepare('INSERT INTO comments (lesson_id,student_id,teacher_id,content) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE content=VALUES(content)')->execute([$lid,(int)$sid,$user['id'],$c]);
-        }
-        $db->commit(); $success=t('saved_ok');
-    } catch (Exception $e) { $db->rollBack(); }
+    } else {
+        $db=db(); $db->beginTransaction();
+        try {
+            foreach ($_POST['attendance']??[] as $sid=>$s) {
+                if (!in_array($s,['present','absent','late'])) continue;
+                $db->prepare('INSERT INTO attendance (lesson_id,student_id,status) VALUES (?,?,?) ON DUPLICATE KEY UPDATE status=VALUES(status)')->execute([$lid,(int)$sid,$s]);
+            }
+            $hwt=trim($_POST['hw_title']??'');
+            if ($hwt) {
+                $hwd=trim($_POST['hw_desc']??'')?:null; $hwdue=$_POST['hw_due']??''?:null;
+                $ex=$db->prepare('SELECT id FROM homework WHERE lesson_id=?'); $ex->execute([$lid]); $ex=$ex->fetch();
+                if ($ex) $db->prepare('UPDATE homework SET title=?,description=?,due_date=? WHERE id=?')->execute([$hwt,$hwd,$hwdue,$ex['id']]);
+                else $db->prepare('INSERT INTO homework (lesson_id,title,description,due_date) VALUES (?,?,?,?)')->execute([$lid,$hwt,$hwd,$hwdue]);
+            }
+            foreach ($_POST['comment']??[] as $sid=>$c) {
+                $c=trim($c); if (!$c) continue;
+                $db->prepare('INSERT INTO comments (lesson_id,student_id,teacher_id,content) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE content=VALUES(content)')->execute([$lid,(int)$sid,$user['id'],$c]);
+            }
+            $db->commit(); $success=t('saved_ok');
+        } catch (Exception $e) { $db->rollBack(); }
+    }
 }
 
 $st=db()->prepare("SELECT u.id,u.name,a.status AS att,c.content AS cm FROM student_groups sg JOIN users u ON u.id=sg.student_id LEFT JOIN attendance a ON a.lesson_id=? AND a.student_id=u.id LEFT JOIN comments c ON c.lesson_id=? AND c.student_id=u.id WHERE sg.group_id=? ORDER BY u.name");
@@ -43,6 +54,15 @@ $st->execute([$lid,$lid,$lesson['gid']]);
 $students=$st->fetchAll();
 
 $st=db()->prepare('SELECT * FROM homework WHERE lesson_id=?'); $st->execute([$lid]); $hw=$st->fetch();
+
+// Who submitted hw
+$hwDone = [];
+if ($hw) {
+    $st = db()->prepare('SELECT student_id FROM hw_done WHERE homework_id=?');
+    $st->execute([$hw['id']]);
+    foreach ($st->fetchAll() as $r) $hwDone[$r['student_id']] = true;
+}
+$hwDoneCount = count($hwDone);
 ?>
 <!DOCTYPE html>
 <html lang="<?= getLang() ?>">
@@ -58,16 +78,43 @@ $st=db()->prepare('SELECT * FROM homework WHERE lesson_id=?'); $st->execute([$li
 
   <!-- Breadcrumb -->
   <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:18px;flex-wrap:wrap">
-    <a href="/teacher/" style="color:var(--muted);text-decoration:none;font-weight:500;transition:color .12s" onmouseover="this.style.color='var(--black)'" onmouseout="this.style.color='var(--muted)'"><?= h(t('teacher_dashboard')) ?></a>
+    <a href="/teacher/" style="color:var(--muted);text-decoration:none;font-weight:500"><?= h(t('teacher_dashboard')) ?></a>
     <span>›</span>
-    <a href="/teacher/group.php?id=<?= $lesson['gid'] ?>" style="color:var(--muted);text-decoration:none;font-weight:500;transition:color .12s" onmouseover="this.style.color='var(--black)'" onmouseout="this.style.color='var(--muted)'"><?= h($lesson['gn']) ?></a>
+    <a href="/teacher/group.php?id=<?= $lesson['gid'] ?>" style="color:var(--muted);text-decoration:none;font-weight:500"><?= h($lesson['gn']) ?></a>
     <span>›</span>
     <span style="color:var(--black);font-weight:600"><?= h($lesson['title']) ?></span>
   </div>
 
-  <div style="margin-bottom:24px">
-    <h1 class="page-title"><?= h($lesson['title']) ?></h1>
-    <p class="page-sub"><?= date('d.m.Y',strtotime($lesson['lesson_date'])) ?><?= $lesson['subject']?' · '.h($lesson['subject']):'' ?></p>
+  <!-- Title + edit button -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px">
+    <div>
+      <h1 class="page-title"><?= h($lesson['title']) ?></h1>
+      <p class="page-sub"><?= date('d.m.Y',strtotime($lesson['lesson_date'])) ?></p>
+    </div>
+    <button onclick="var f=document.getElementById('editLessonForm');f.style.display=f.style.display===''?'none':''" class="btn btn-outline btn-sm" style="flex-shrink:0;margin-top:4px">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      <?= h(t('edit_lesson')) ?>
+    </button>
+  </div>
+
+  <!-- Edit lesson form -->
+  <div id="editLessonForm" style="display:none;margin-bottom:16px">
+    <div class="card p5">
+      <form method="POST" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <label class="label"><?= h(t('lesson_title')) ?></label>
+          <input type="text" name="lesson_title" required class="input" value="<?= h($lesson['title']) ?>">
+        </div>
+        <div>
+          <label class="label"><?= h(t('lesson_date')) ?></label>
+          <input type="date" name="lesson_date" required class="input" value="<?= h($lesson['lesson_date']) ?>">
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="submit" name="edit_lesson" class="btn btn-black"><?= h(t('btn_save')) ?></button>
+          <button type="button" onclick="document.getElementById('editLessonForm').style.display='none'" class="btn btn-ghost"><?= h(t('cancel')) ?></button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <?php if ($success): ?><div class="alert alert-success" style="margin-bottom:18px">✓ <?= h($success) ?></div><?php endif; ?>
@@ -76,19 +123,29 @@ $st=db()->prepare('SELECT * FROM homework WHERE lesson_id=?'); $st->execute([$li
 
     <!-- Attendance -->
     <div class="card p5">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <div class="icon-wrap"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
-        <span style="font-size:15px;font-weight:700;color:var(--black)"><?= h(t('mark_attendance')) ?></span>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="icon-wrap"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <span style="font-size:15px;font-weight:700;color:var(--black)"><?= h(t('mark_attendance')) ?></span>
+        </div>
+        <?php if ($hw && !empty($students)): ?>
+          <span style="font-size:12px;color:var(--muted)">
+            ДЗ: <strong style="color:var(--green)"><?= $hwDoneCount ?></strong> / <?= count($students) ?> <?= h(t('hw_submitted_by')) ?>
+          </span>
+        <?php endif; ?>
       </div>
       <?php if (empty($students)): ?>
         <p style="color:var(--muted);font-size:14px"><?= h(t('no_students')) ?></p>
       <?php else: ?>
         <div style="display:flex;flex-direction:column;gap:6px">
           <?php foreach ($students as $s): $att=$s['att']??'present'; ?>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg-sub);border:1px solid var(--border);border-radius:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg-sub);border:1px solid var(--border);border-radius:8px;gap:8px">
             <div style="display:flex;align-items:center;gap:9px">
               <div class="avatar-sm"><?= mb_strtoupper(mb_substr($s['name'],0,1)) ?></div>
               <span style="font-size:14px;font-weight:600;color:var(--black)"><?= h($s['name']) ?></span>
+              <?php if ($hw && isset($hwDone[$s['id']])): ?>
+                <span style="font-size:10px;font-weight:700;color:var(--green);background:var(--green-bg);border-radius:4px;padding:1px 5px">✓ ДЗ</span>
+              <?php endif; ?>
             </div>
             <div style="display:flex;gap:5px">
               <?php foreach (['present'=>[t('present'),'badge-green'],'late'=>[t('late'),'badge-amber'],'absent'=>[t('absent'),'badge-red']] as $v=>[$lbl,$bc]): ?>

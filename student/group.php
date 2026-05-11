@@ -15,17 +15,33 @@ $st->execute([$gid,$user['id']]);
 $group = $st->fetch();
 if (!$group) { header('Location: /student/'); exit; }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_hw_done'])) {
+    $hwId = (int)($_POST['hw_id'] ?? 0);
+    if ($hwId) {
+        $ex = db()->prepare('SELECT id FROM hw_done WHERE homework_id=? AND student_id=?');
+        $ex->execute([$hwId, $user['id']]);
+        if ($ex->fetch()) {
+            db()->prepare('DELETE FROM hw_done WHERE homework_id=? AND student_id=?')->execute([$hwId, $user['id']]);
+        } else {
+            db()->prepare('INSERT IGNORE INTO hw_done (homework_id,student_id) VALUES (?,?)')->execute([$hwId, $user['id']]);
+        }
+    }
+    header('Location: /student/group.php?id='.$gid); exit;
+}
+
 $st = db()->prepare("
     SELECT l.*,a.status AS my_att,
            h.id AS hid,h.title AS ht,h.description AS hd,h.due_date AS hdue,
-           c.content AS cm
+           c.content AS cm,
+           hwd.id AS hw_done_id
     FROM lessons l
     LEFT JOIN attendance a ON a.lesson_id=l.id AND a.student_id=?
     LEFT JOIN homework h ON h.lesson_id=l.id
+    LEFT JOIN hw_done hwd ON hwd.homework_id=h.id AND hwd.student_id=?
     LEFT JOIN comments c ON c.lesson_id=l.id AND c.student_id=?
     WHERE l.group_id=? ORDER BY l.lesson_date DESC
 ");
-$st->execute([$user['id'],$user['id'],$gid]);
+$st->execute([$user['id'],$user['id'],$user['id'],$gid]);
 $lessons = $st->fetchAll();
 
 $attBadge = ['present'=>'badge-green','absent'=>'badge-red','late'=>'badge-amber'];
@@ -91,7 +107,18 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
             <?php if ($l['hid']): ?>
               <div style="font-size:14px;font-weight:600;color:var(--black);margin-bottom:3px"><?= h($l['ht']) ?></div>
               <?php if ($l['hd']): ?><div style="font-size:12px;color:var(--muted);margin-bottom:3px"><?= h($l['hd']) ?></div><?php endif; ?>
-              <?php if ($l['hdue']): ?><div style="font-size:12px;color:var(--red);font-weight:500"><?= h(t('due_date')) ?>: <?= date('d.m.Y',strtotime($l['hdue'])) ?></div><?php endif; ?>
+              <?php if ($l['hdue']): ?><div style="font-size:12px;color:var(--red);font-weight:500;margin-bottom:8px"><?= h(t('due_date')) ?>: <?= date('d.m.Y',strtotime($l['hdue'])) ?></div><?php endif; ?>
+              <form method="POST">
+                <input type="hidden" name="toggle_hw_done" value="1">
+                <input type="hidden" name="hw_id" value="<?= $l['hid'] ?>">
+                <?php if ($l['hw_done_id']): ?>
+                  <button type="submit" class="btn btn-sm" style="background:var(--green-bg);color:var(--green);border:1px solid #BBF7D0;font-weight:600">
+                    ✓ <?= h(t('hw_done')) ?>
+                  </button>
+                <?php else: ?>
+                  <button type="submit" class="btn btn-outline btn-sm"><?= h(t('hw_mark_done')) ?></button>
+                <?php endif; ?>
+              </form>
             <?php else: ?>
               <div style="font-size:13px;color:#D4D4D8"><?= h(t('no_homework')) ?></div>
             <?php endif; ?>
