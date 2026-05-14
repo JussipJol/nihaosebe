@@ -167,7 +167,7 @@ function sidebar(array $user, string $active, string $langQ = ''): string
     </svg>
     <div>
       <div class=\"sb-brand-name\">".APP_NAME."</div>
-      <div class=\"sb-brand-sub\">Образовательный центр</div>
+      <div class=\"sb-brand-sub\">".t('edu_center')."</div>
     </div>
   </a>
   <nav class=\"sb-nav\">{$nav}</nav>

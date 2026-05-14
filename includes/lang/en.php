@@ -145,4 +145,19 @@ return [
     'confirm_remove_student'=> 'Remove this student from the group?',
     'no_homework_all'       => 'No homework assigned',
     'hw_submitted_by'       => 'submitted',
+
+    // Extra UI labels
+    'groups_label'          => 'Groups',
+    'attendance_pct'        => 'Attendance',
+    'recent_lessons'        => 'Recent Lessons',
+    'hw_short'              => 'HW',
+    'join_code_hint'        => 'The code is provided by your teacher',
+    'hsk_level_label'       => 'HSK Level',
+    'days_of_week'          => 'Days of week',
+    'lesson_time_label'     => 'Class time',
+    'no_data'               => 'No data',
+    'field_login'           => 'Login',
+    'field_login_ph'        => 'Your login',
+    'hw_overdue'            => 'Overdue',
+    'edu_center'            => 'Educational Center',
 ];

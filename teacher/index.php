@@ -95,9 +95,9 @@ $showForm = $error || $success;
                    value="<?= h($_POST['group_name']??'') ?>">
           </div>
           <div>
-            <label class="label">Уровень HSK</label>
+            <label class="label"><?= h(t('hsk_level_label')) ?></label>
             <select name="hsk_level" class="input" style="width:auto">
-              <option value="0">Без уровня</option>
+              <option value="0"><?= h(t('hsk_none')) ?></option>
               <?php for ($i=1;$i<=6;$i++): ?>
                 <option value="<?= $i ?>" <?= (($_POST['hsk_level']??0)==$i)?'selected':'' ?>>HSK <?= $i ?></option>
               <?php endfor; ?>
@@ -107,7 +107,7 @@ $showForm = $error || $success;
 
         <!-- Дни недели -->
         <div>
-          <label class="label">Дни недели</label>
+          <label class="label"><?= h(t('days_of_week')) ?></label>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
             <?php
             $selDays = $_POST['schedule'] ?? [];
@@ -124,7 +124,7 @@ $showForm = $error || $success;
 
         <!-- Время занятий -->
         <div>
-          <label class="label">Время занятий</label>
+          <label class="label"><?= h(t('lesson_time_label')) ?></label>
           <div style="display:flex;align-items:center;gap:10px">
             <input type="time" name="time_from" class="input" style="width:130px" value="<?= h($_POST['time_from']??'') ?>">
             <span style="color:var(--muted);font-size:14px">—</span>
@@ -135,7 +135,7 @@ $showForm = $error || $success;
         <div style="display:flex;gap:8px">
           <button type="submit" name="create_group" class="btn btn-black"><?= h(t('btn_create')) ?></button>
           <button type="button" onclick="document.getElementById('cf').style.display='none'" class="btn btn-ghost">
-            <?= getLang()==='ru'?'Отмена':(getLang()==='kz'?'Бас тарту':'Cancel') ?>
+            <?= h(t('cancel')) ?>
           </button>
         </div>
       </form>

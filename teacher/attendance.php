@@ -111,7 +111,7 @@ foreach ($students as $s) {
   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap">
     <div>
       <h1 class="page-title"><?= h(t('attendance_overview')) ?></h1>
-      <p class="page-sub"><?= h($group['name']) ?> · <?= count($students) ?> студентов · <?= count($lessons) ?> уроков</p>
+      <p class="page-sub"><?= h($group['name']) ?> · <?= count($students) ?> <?= h(t('students_count')) ?> · <?= count($lessons) ?> <?= h(t('lessons_count')) ?></p>
     </div>
     <?php if (!empty($lessons) && !empty($students)): ?>
     <a href="?id=<?= $gid ?>&export=csv" class="btn btn-outline btn-sm">
@@ -129,7 +129,7 @@ foreach ($students as $s) {
         <table class="att-table">
           <thead>
             <tr>
-              <th class="name-th" style="min-width:160px">Студент</th>
+              <th class="name-th" style="min-width:160px"><?= h(t('role_student')) ?></th>
               <?php foreach ($lessons as $l): ?>
                 <th style="text-align:center;min-width:70px">
                   <div><?= date('d.m', strtotime($l['lesson_date'])) ?></div>
@@ -174,10 +174,10 @@ foreach ($students as $s) {
       </div>
       <!-- Legend -->
       <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-green" style="width:18px;height:18px;font-size:9px">✓</span> Присутствовал</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-amber" style="width:18px;height:18px;font-size:9px">⏱</span> Опоздал</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-red" style="width:18px;height:18px;font-size:9px">✗</span> Отсутствовал</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-none" style="width:18px;height:18px;font-size:9px">–</span> Нет данных</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-green" style="width:18px;height:18px;font-size:9px">✓</span> <?= h(t('present')) ?></div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-amber" style="width:18px;height:18px;font-size:9px">⏱</span> <?= h(t('late')) ?></div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-red" style="width:18px;height:18px;font-size:9px">✗</span> <?= h(t('absent')) ?></div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)"><span class="dot dot-none" style="width:18px;height:18px;font-size:9px">–</span> <?= h(t('no_data')) ?></div>
       </div>
     </div>
   <?php endif; ?>

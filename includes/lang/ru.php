@@ -145,4 +145,19 @@ return [
     'confirm_remove_student'=> 'Убрать студента из группы?',
     'no_homework_all'       => 'Домашних заданий нет',
     'hw_submitted_by'       => 'сдали ДЗ',
+
+    // Extra UI labels
+    'groups_label'          => 'Групп',
+    'attendance_pct'        => 'Посещаемость',
+    'recent_lessons'        => 'Последние уроки',
+    'hw_short'              => 'ДЗ',
+    'join_code_hint'        => 'Код выдаёт преподаватель',
+    'hsk_level_label'       => 'Уровень HSK',
+    'days_of_week'          => 'Дни недели',
+    'lesson_time_label'     => 'Время занятий',
+    'no_data'               => 'Нет данных',
+    'field_login'           => 'Логин',
+    'field_login_ph'        => 'Ваш логин',
+    'hw_overdue'            => 'Просрочено',
+    'edu_center'            => 'Образовательный центр',
 ];

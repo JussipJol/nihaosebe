@@ -145,4 +145,19 @@ return [
     'confirm_remove_student'=> 'Студентті топтан шығаруға сенімдісіз бе?',
     'no_homework_all'       => 'Үй тапсырмасы жоқ',
     'hw_submitted_by'       => 'тапсырды',
+
+    // Extra UI labels
+    'groups_label'          => 'Топ',
+    'attendance_pct'        => 'Қатысу',
+    'recent_lessons'        => 'Соңғы сабақтар',
+    'hw_short'              => 'ҮТ',
+    'join_code_hint'        => 'Кодты оқытушы береді',
+    'hsk_level_label'       => 'HSK деңгейі',
+    'days_of_week'          => 'Апта күндері',
+    'lesson_time_label'     => 'Сабақ уақыты',
+    'no_data'               => 'Деректер жоқ',
+    'field_login'           => 'Логин',
+    'field_login_ph'        => 'Логиніңіз',
+    'hw_overdue'            => 'Мерзімі өтті',
+    'edu_center'            => 'Білім беру орталығы',
 ];

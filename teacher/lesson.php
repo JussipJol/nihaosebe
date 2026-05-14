@@ -130,7 +130,7 @@ $hwDoneCount = count($hwDone);
         </div>
         <?php if ($hw && !empty($students)): ?>
           <span style="font-size:12px;color:var(--muted)">
-            ДЗ: <strong style="color:var(--green)"><?= $hwDoneCount ?></strong> / <?= count($students) ?> <?= h(t('hw_submitted_by')) ?>
+            <?= h(t('hw_short')) ?>: <strong style="color:var(--green)"><?= $hwDoneCount ?></strong> / <?= count($students) ?> <?= h(t('hw_submitted_by')) ?>
           </span>
         <?php endif; ?>
       </div>
@@ -144,7 +144,7 @@ $hwDoneCount = count($hwDone);
               <div class="avatar-sm"><?= mb_strtoupper(mb_substr($s['name'],0,1)) ?></div>
               <span style="font-size:14px;font-weight:600;color:var(--black)"><?= h($s['name']) ?></span>
               <?php if ($hw && isset($hwDone[$s['id']])): ?>
-                <span style="font-size:10px;font-weight:700;color:var(--green);background:var(--green-bg);border-radius:4px;padding:1px 5px">✓ ДЗ</span>
+                <span style="font-size:10px;font-weight:700;color:var(--green);background:var(--green-bg);border-radius:4px;padding:1px 5px">✓ <?= h(t('hw_short')) ?></span>
               <?php endif; ?>
             </div>
             <div style="display:flex;gap:5px">

@@ -127,15 +127,15 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
   <!-- Статистика -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:6px">
     <div class="card p5">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Групп</div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px"><?= h(t('groups_label')) ?></div>
       <div style="font-size:28px;font-weight:800;color:var(--black)"><?= (int)$stats['groups_count'] ?></div>
     </div>
     <div class="card p5">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Уроков</div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px"><?= h(t('total_lessons')) ?></div>
       <div style="font-size:28px;font-weight:800;color:var(--black)"><?= $totalLessons ?></div>
     </div>
     <div class="card p5">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Посещаемость</div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px"><?= h(t('attendance_pct')) ?></div>
       <div style="font-size:28px;font-weight:800;color:<?= $attColor ?>"><?= $attPct ?>%</div>
       <div style="margin-top:8px">
         <div class="progress">
@@ -144,13 +144,13 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
       </div>
     </div>
     <div class="card p5">
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Пропущено</div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px"><?= h(t('missed')) ?></div>
       <div style="font-size:28px;font-weight:800;color:var(--red)"><?= (int)$stats['missed'] ?></div>
     </div>
   </div>
 
   <!-- Последние уроки -->
-  <div class="section-title">Последние уроки</div>
+  <div class="section-title"><?= h(t('recent_lessons')) ?></div>
 
   <?php if (empty($recentLessons)): ?>
     <div class="card p5" style="text-align:center;color:var(--muted);font-size:14px;padding:32px"><?= h(t('no_lessons')) ?></div>
@@ -194,7 +194,7 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
         <div style="display:flex;border-top:1px solid var(--border)">
           <?php if ($l['hw_title']): ?>
           <div style="flex:1;padding:10px 16px;<?= $l['comment'] ? 'border-right:1px solid var(--border)' : '' ?>">
-            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">ДЗ</div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px"><?= h(t('hw_short')) ?></div>
             <div style="font-size:13px;font-weight:600;color:var(--black)"><?= h($l['hw_title']) ?></div>
             <?php if ($l['hw_due']): ?>
               <div style="font-size:11px;color:var(--red);margin-top:2px">до <?= date('d.m', strtotime($l['hw_due'])) ?></div>
@@ -203,7 +203,7 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
           <?php endif; ?>
           <?php if ($l['comment']): ?>
           <div style="flex:1;padding:10px 16px">
-            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Комментарий</div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px"><?= h(t('teacher_comment')) ?></div>
             <div style="font-size:13px;color:var(--black);line-height:1.4"><?= h($l['comment']) ?></div>
           </div>
           <?php endif; ?>
@@ -216,7 +216,7 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
 
   <!-- Мои группы -->
   <?php if (!empty($groups)): ?>
-  <div class="section-title">Мои группы</div>
+  <div class="section-title"><?= h(t('my_groups')) ?></div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
     <?php foreach ($groups as $g):
       $tl  = (int)$g['tl'];
@@ -250,15 +250,15 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
       <div style="display:flex;gap:8px;margin-bottom:8px">
         <div class="stat" style="background:var(--bg-sub);flex:1;padding:8px 10px">
           <div style="font-size:18px;font-weight:800;color:var(--black)"><?= $tl ?></div>
-          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Уроков</div>
+          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px"><?= h(t('total_lessons')) ?></div>
         </div>
         <div class="stat" style="background:var(--green-bg);flex:1;padding:8px 10px">
           <div style="font-size:18px;font-weight:800;color:var(--green)"><?= $att ?></div>
-          <div style="font-size:10px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Посещено</div>
+          <div style="font-size:10px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-top:2px"><?= h(t('attended')) ?></div>
         </div>
         <div class="stat" style="background:var(--red-bg);flex:1;padding:8px 10px">
           <div style="font-size:18px;font-weight:800;color:var(--red)"><?= (int)$g['msd'] ?></div>
-          <div style="font-size:10px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Пропущено</div>
+          <div style="font-size:10px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-top:2px"><?= h(t('missed')) ?></div>
         </div>
       </div>
       <div class="progress">
@@ -284,11 +284,11 @@ $attLabel = ['present'=>t('present'),'absent'=>t('absent'),'late'=>t('late')];
         <input type="text" name="join_code" maxlength="6" class="input mono"
                style="text-transform:uppercase;letter-spacing:.15em;font-size:18px;font-weight:700;text-align:center"
                placeholder="XXXXXX" autofocus>
-        <p style="font-size:11px;color:var(--muted);margin-top:5px">Код выдаёт преподаватель</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:5px"><?= h(t('join_code_hint')) ?></p>
       </div>
       <div style="display:flex;gap:8px">
         <button type="submit" class="btn btn-black"><?= h(t('btn_join')) ?></button>
-        <button type="button" onclick="document.getElementById('joinModal').style.display='none'" class="btn btn-ghost">Отмена</button>
+        <button type="button" onclick="document.getElementById('joinModal').style.display='none'" class="btn btn-ghost"><?= h(t('cancel')) ?></button>
       </div>
     </form>
   </div>

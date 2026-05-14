@@ -85,9 +85,9 @@ a{text-decoration:none;color:inherit}
 
     <form method="POST">
       <div class="form-group">
-        <label class="label">Логин</label>
+        <label class="label"><?= h(t('field_login')) ?></label>
         <input type="text" name="login" required autocomplete="username" class="input"
-               value="<?= h($_POST['login'] ?? '') ?>" placeholder="Ваш логин">
+               value="<?= h($_POST['login'] ?? '') ?>" placeholder="<?= h(t('field_login_ph')) ?>">
       </div>
       <div class="form-group">
         <label class="label"><?= h(t('field_password')) ?></label>

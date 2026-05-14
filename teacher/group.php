@@ -170,7 +170,7 @@ $students = $st->fetchAll();
           </div>
         </div>
         <div>
-          <label class="label"><?= getLang()==='ru'?'Дни недели':(getLang()==='kz'?'Апта күндері':'Days') ?></label>
+          <label class="label"><?= h(t('days_of_week')) ?></label>
           <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
             <?php foreach ($days as $d): ?>
             <div>
@@ -182,7 +182,7 @@ $students = $st->fetchAll();
           </div>
         </div>
         <div>
-          <label class="label"><?= getLang()==='ru'?'Время занятий':(getLang()==='kz'?'Сабақ уақыты':'Time') ?></label>
+          <label class="label"><?= h(t('lesson_time_label')) ?></label>
           <div style="display:flex;align-items:center;gap:8px">
             <input type="time" name="time_from" class="input" style="width:130px" value="<?= h($existingTimeFrom) ?>">
             <span style="color:var(--muted)">—</span>

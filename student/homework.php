@@ -57,7 +57,7 @@ $today = date('Y-m-d');
 
   <div style="margin-bottom:24px">
     <h1 class="page-title"><?= h(t('my_homework')) ?></h1>
-    <p class="page-sub"><?= count($pending) ?> не выполнено · <?= count($done) ?> выполнено</p>
+    <p class="page-sub"><?= count($pending) ?> <?= mb_strtolower(t('hw_pending')) ?> · <?= count($done) ?> <?= mb_strtolower(t('hw_completed')) ?></p>
   </div>
 
   <?php if (empty($all)): ?>
@@ -96,7 +96,7 @@ $today = date('Y-m-d');
                 <?php if ($h['due_date']): ?>
                   <span style="color:var(--border)">·</span>
                   <span style="font-size:12px;font-weight:600;color:<?= $overdue?'var(--red)':($soon?'var(--amber)':'var(--muted)') ?>">
-                    <?= $overdue?'Просрочено: ':h(t('due_date')).': ' ?><?= date('d.m.Y', strtotime($h['due_date'])) ?>
+                    <?= $overdue?(h(t('hw_overdue')).': '):h(t('due_date')).': ' ?><?= date('d.m.Y', strtotime($h['due_date'])) ?>
                   </span>
                 <?php endif; ?>
               </div>
